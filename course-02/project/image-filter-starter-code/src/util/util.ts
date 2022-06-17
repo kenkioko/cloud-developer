@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs, { constants } from "fs";
 import Jimp = require("jimp");
 
 // filterImageFromURL
@@ -34,6 +34,9 @@ export async function filterImageFromURL(inputURL: string): Promise<string> {
 //    files: Array<string> an array of absolute paths to files
 export async function deleteLocalFiles(files: Array<string>) {
   for (let file of files) {
-    fs.unlinkSync(file);
+    fs.access(file, constants.F_OK, (err) => {
+      if (!err)
+        fs.unlinkSync(file);
+    });
   }
 }
